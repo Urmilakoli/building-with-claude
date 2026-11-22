@@ -14,6 +14,7 @@ This repo is my public record of what I build with the help of Claude (Anthropic
 | 21 Nov 2026 | 12-week learning plan | [`learning/learning-plan`](learning/learning-plan) | A tickable day-by-day plan that links every topic to its lesson |
 | 21 Nov 2026 | Daily learning reminder | [`automations/daily-learning-reminder`](automations/daily-learning-reminder) | A scheduled task that sends me each day's 3 topics every morning |
 | 22 Nov 2026 | Smart Revision App | [`apps/smart-revision-app`](apps/smart-revision-app) | A spaced-repetition flashcard app that adapts to what I keep forgetting |
+| 22 Nov 2026 | Urmila's MBA University | [`learning/mba-university`](learning/mba-university) | My lessons as a university: courses, credits, transcript, capstone, diploma, plus an Ollama AI tutor and AI-generated courses |
 | 22 Nov 2026 | This record-keeping system | [`system/record-keeping`](system/record-keeping) | How this repo and my private diary repo are organised |
 
 Every request I give Claude is listed in order in [`COMMANDS_LOG.md`](COMMANDS_LOG.md).
@@ -45,6 +46,7 @@ Each project folder has its own `README.md` with:
 - **Python**, for the build scripts that generate lessons from data
 - **Claude artifacts**, for hosting the live pages
 - **Scheduled tasks**, for the daily reminder
+- **Ollama**, for local AI models that run on my own computer (tutor and course generation)
 
 ## Opening the files
 

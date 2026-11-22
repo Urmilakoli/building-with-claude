@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Urmila's MBA University</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: a proud, warm university registrar: formal titles, plain instructions
+   IDEA: the student portal of a private university with one student
+   PICTURE: the university crest beside a student ID card with live credits and GPA
+   COLOUR and TYPE: Oxford burgundy field, white ground, near-black ink, sage accent; EB Garamond titles, Source Sans 3 body
+   LAYOUT: crest + ID card; academic calendar; schools and courses; transcript; capstone; diploma */
+:root{color-scheme:light dark;--bg:light-dark(#fff,#15110f);--ink:light-dark(#1d1416,#f2ece8);--wine:#6d1a36;--wineInk:#fff;--sage:light-dark(#5f7f5e,#a3c3a2);--soft:light-dark(#f7eff1,#231a1c);--line:light-dark(#e8d6db,#3b2b2f);--card:light-dark(#fff,#1c1517);--mute:light-dark(#62555a,#bcaeb2);--ok:light-dark(#2f7d4f,#6fd19a);--bad:light-dark(#b3261e,#ff8a80)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16.5px/1.55 'Source Sans 3',system-ui,sans-serif;overflow-x:clip}
+h1,h2,h3{font-family:'EB Garamond',Georgia,serif;line-height:1.08;text-wrap:balance;margin:0;font-weight:600}
+h1{font-size:clamp(36px,6vw,52px)}h2{font-size:clamp(28px,4vw,38px)}h3{font-size:21px}
+.band{padding:clamp(28px,4vw,60px) max(5vw,16px)}.wrap{max-width:1200px;margin:auto}
+.hero{background:var(--wine);color:var(--wineInk)}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:36px;align-items:center}
+.crestRow{display:flex;gap:20px;align-items:center}.crestRow svg{width:108px;height:auto;flex:none}
+.motto{font-family:'EB Garamond',serif;font-style:italic;font-size:19px;opacity:.9;margin:6px 0 0}
+.hero p.lead{font-size:18px;max-width:34em;margin:18px 0 0}
+.idcard{background:#fff;color:#1d1416;border-radius:18px;padding:20px 22px;box-shadow:0 10px 0 #3e0d1e;display:grid;grid-template-columns:84px minmax(0,1fr);gap:16px;align-items:start}
+.photo{width:84px;height:104px;border-radius:10px;background:#f1e3e7;display:grid;place-items:center;font:700 34px 'EB Garamond',serif;color:#6d1a36;border:2px solid #e3c9d0}
+.idcard .lbl{font-size:12.5px;color:#62555a;font-weight:600}.idcard .val{font-weight:700;font-size:16px;margin-bottom:6px}
+.idcard h3{font-size:22px;margin-bottom:8px}
+.idgrid{display:grid;grid-template-columns:1fr 1fr;gap:2px 14px}
+.prog{grid-column:1/-1;margin-top:6px}.bar{height:12px;background:#f1e3e7;border-radius:8px;overflow:hidden;margin:6px 0 2px}.bar i{display:block;height:100%;background:#5f7f5e;width:0;transition:width .5s}
+.terms{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px;margin-top:18px}
+.term{border:2px solid var(--line);border-radius:16px;padding:16px 18px;background:var(--card)}
+.term .dates{color:var(--mute);font-weight:600;font-size:15px;margin:2px 0 8px;white-space:nowrap}
+.term ul{margin:0;padding-left:20px}
+.school{margin-top:26px}.school>h3{border-bottom:2px solid var(--line);padding-bottom:6px;margin-bottom:12px}
+.courses{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:12px}
+.course{border:2px solid var(--line);border-radius:16px;padding:16px 18px;background:var(--card);display:flex;flex-direction:column;gap:6px}
+.code{font:700 13.5px 'Source Sans 3';letter-spacing:.02em;color:var(--wine);background:var(--soft);border-radius:6px;padding:2px 8px;align-self:flex-start}
+:root[data-theme=dark] .code{color:#f2a9bd}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .code{color:#f2a9bd}}
+.course .meta{color:var(--mute);font-size:14.5px}
+.course .row{margin-top:auto}
+.btn{font:700 15px 'Source Sans 3';min-height:44px;padding:9px 16px;border-radius:10px;border:2px solid currentColor;background:transparent;color:inherit;text-decoration:none;cursor:pointer;display:inline-flex;align-items:center}
+.btn.solid{background:var(--wine);border-color:var(--wine);color:#fff}
+.row{display:flex;flex-wrap:wrap;gap:8px}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--sage);outline-offset:2px}
+table{border-collapse:collapse;width:100%;margin-top:14px;font-size:15.5px}
+th,td{border-bottom:1px solid var(--line);padding:10px 8px;text-align:left;vertical-align:middle}
+th{font-family:'EB Garamond',serif;font-size:17px}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+td input[type=number]{width:76px;font:16px 'Source Sans 3';min-height:40px;padding:6px 8px;border-radius:8px;border:2px solid var(--line);background:var(--card);color:var(--ink);text-align:right}
+.pass{color:var(--ok);font-weight:700}.fail{color:var(--bad);font-weight:700}.pend{color:var(--mute)}
+tfoot td{font-weight:700;border-top:2px solid var(--ink)}
+.capstone{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:24px;align-items:start}
+.brief{background:var(--soft);border-radius:16px;padding:18px 20px}
+.brief ol{padding-left:20px;margin:8px 0}
+textarea{width:100%;min-height:150px;font:15.5px/1.5 'Source Sans 3';border-radius:12px;border:2px solid var(--line);background:var(--card);color:var(--ink);padding:12px}
+.diploma{max-width:820px;margin:18px auto 0;background:light-dark(#fffdf8,#1d1714);border:3px double var(--wine);outline:1px solid var(--line);outline-offset:6px;border-radius:6px;padding:clamp(24px,5vw,56px);text-align:center;color:var(--ink)}
+.diploma h3{font-size:clamp(28px,5vw,42px);margin:8px 0}
+.diploma .name{font-family:'EB Garamond',serif;font-size:clamp(34px,6vw,54px);font-style:italic;color:var(--wine);margin:10px 0}
+:root[data-theme=dark] .diploma .name{color:#f2a9bd}
+.locked{opacity:.55;filter:grayscale(.6)}
+.small{font-size:13.5px;color:var(--mute)}
+.stack thead{display:table-header-group}
+@media(max-width:700px){.hero .wrap,.capstone{grid-template-columns:minmax(0,1fr)}.crestRow svg{width:80px}
+ .stack thead{display:none}.stack tr{display:grid;padding:10px 0;border-bottom:1px solid var(--line)}.stack td{border:0;padding:3px 0;display:flow-root;padding-inline-start:8.5em;text-align:start}.stack td::before{content:attr(data-l);float:inline-start;width:8em;margin-inline-start:-8.5em;color:var(--mute);font-size:13.5px}.stack tfoot tr{border-top:2px solid var(--ink)}}
+</style>
+</head>
+<body>
+<header class="band hero"><div class="wrap">
+  <div>
+    <div class="crestRow">
+      <svg viewBox="0 0 120 140" role="img" aria-label="University crest">
+        <path d="M60 4 L112 20 V66 C112 102 88 124 60 136 C32 124 8 102 8 66 V20 Z" fill="#fff"/>
+        <path d="M60 12 L104 26 V66 C104 97 84 116 60 127 C36 116 16 97 16 66 V26 Z" fill="#6d1a36"/>
+        <path d="M30 56 Q45 48 60 56 Q75 48 90 56 V92 Q75 84 60 92 Q45 84 30 92 Z" fill="#fff"/>
+        <path d="M60 56 V92" stroke="#6d1a36" stroke-width="2"/>
+        <path d="M60 22 l4.5 9 10 1.4 -7.2 7 1.7 10 -9 -4.7 -9 4.7 1.7 -10 -7.2 -7 10 -1.4 Z" fill="#a3c3a2"/>
+        <text x="60" y="110" text-anchor="middle" font-family="EB Garamond,serif" font-size="10" font-weight="700" fill="#fff">MMXXVI</text>
+      </svg>
+      <div><h1>Urmila's MBA University</h1><p class="motto">Curiositas ducit · Curiosity leads</p></div>
+    </div>
+    <p class="lead">A private university with one student. 11 courses, 60 ECTS credits, three terms and a capstone in finance and risk, built from every topic you chose to learn.</p>
+    <div class="row" style="margin-top:18px"><a class="btn" style="color:#fff" href="{{PLAN}}">Open the timetable (learning plan)</a><a class="btn" style="color:#fff" href="{{APP}}">Revision library</a></div>
+  </div>
+  <div class="idcard" aria-label="Student ID card">
+    <div class="photo">UK</div>
+    <div>
+      <h3>Student ID</h3>
+      <div class="idgrid">
+        <div><div class="lbl">Name</div><div class="val">Urmila Koli</div></div>
+        <div><div class="lbl">Student no.</div><div class="val">UMU-2026-0001</div></div>
+        <div><div class="lbl">Programme</div><div class="val">MBA, Business & Ideas</div></div>
+        <div><div class="lbl">Campus</div><div class="val">Berlin</div></div>
+        <div><div class="lbl">Enrolled</div><div class="val">23 Nov 2026</div></div>
+        <div><div class="lbl">Graduation</div><div class="val">14 Feb 2027</div></div>
+        <div class="prog"><div class="lbl" id="ectsTxt"></div><div class="bar"><i id="ectsBar"></i></div><div class="lbl" id="gpaTxt"></div></div>
+      </div>
+    </div>
+  </div>
+</div></header>
+
+<section class="band"><div class="wrap">
+  <h2>Academic calendar</h2>
+  <p class="small">Lectures Monday to Saturday (3 topics a day, about 20 minutes). Sunday seminars: games and review.</p>
+  <div class="terms" id="terms"></div>
+</div></section>
+
+<section class="band" style="background:var(--soft)"><div class="wrap">
+  <h2>Schools & courses</h2>
+  <p class="small">Each course opens in its classroom (the lesson). Credits are earned when you pass the course on your transcript.</p>
+  <div id="schools"></div>
+  <div class="school" id="aiElectives" hidden><h3>AI-generated electives <span class="small">(created on your computer with Ollama · double-check facts)</span></h3><div class="courses" id="aiCourses"></div></div>
+</div></section>
+
+<section class="band"><div class="wrap">
+  <h2>Transcript</h2>
+  <p class="small">After you finish a course, enter how many quiz questions you got right on the first try. Your grade uses the German scale (1.0 best, 4.0 pass, 5.0 fail), and you earn the credits with 50% or more. Saved in this browser only.</p>
+  <div style="overflow-x:auto"><table class="stack" id="transcript"></table></div>
+</div></section>
+
+<section class="band" style="background:var(--soft)"><div class="wrap">
+  <h2>CAP 300 · Capstone: Ideas for Finance & Risk</h2>
+  <div class="capstone">
+    <div class="brief">
+      <p><b>6 ECTS · Term 3 · Due 14 Feb 2027</b></p>
+      <p>Write a one-page memo to a fintech or bank risk team that uses <b>at least five concepts from five different courses</b> to improve one real process. Ideas:</p>
+      <ol>
+        <li><b>AML alert fatigue:</b> base-rate neglect (THK 102), behavioural nudges (ECO 201), machine learning precision and recall (TEC 210)</li>
+        <li><b>Sanctions screening:</b> economic sanctions and chokepoints (IRL 260), corruption and PEPs (GOV 250), misleading graphs (THK 102)</li>
+        <li><b>Customer savings app:</b> habits (PSY 101), loss aversion and defaults (ECO 201), human-computer interaction (TEC 210)</li>
+      </ol>
+      <p><b>Assessment:</b> clear problem (20%), correct use of concepts (40%), evidence and data (20%), clear writing (20%). Paste your memo, then ask Claude to grade it against this rubric.</p>
+    </div>
+    <div>
+      <label for="memo"><b>Your capstone memo</b> (saved in this browser)</label>
+      <textarea id="memo" placeholder="To: Risk team&#10;From: Urmila Koli&#10;Subject: …"></textarea>
+      <p class="small" id="memoCount"></p>
+    </div>
+  </div>
+</div></section>
+
+<section class="band" id="tutor" style="background:var(--soft)"><div class="wrap">
+  <h2>AI Tutor (Ollama, on your own computer)</h2>
+  <p class="small">Uses a free AI model running locally through Ollama: nothing leaves your computer. It only works when this page is opened from your computer (see the setup steps in the GitHub README); the online version can't reach your computer.</p>
+  <div class="capstone">
+    <div>
+      <div class="row" style="align-items:center"><span id="olStatus" class="small">Not connected</span><button class="btn" id="olConnect">Connect to Ollama</button></div>
+      <label class="small" for="olModel" style="display:block;margin-top:10px">Model</label>
+      <select id="olModel" style="font:16px 'Source Sans 3';min-height:44px;width:100%;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink);padding:6px 10px"></select>
+      <label class="small" for="olMode" style="display:block;margin-top:10px">What do you need?</label>
+      <select id="olMode" style="font:16px 'Source Sans 3';min-height:44px;width:100%;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink);padding:6px 10px">
+        <option value="explain">Explain a topic simply, with an example</option>
+        <option value="quiz">Quiz me with 3 questions</option>
+        <option value="grade">Grade my capstone memo against the rubric</option>
+        <option value="english">Fix my English and explain the corrections</option>
+        <option value="ask">Ask anything</option>
+      </select>
+      <label class="small" for="olInput" style="display:block;margin-top:10px">Topic, question or text</label>
+      <textarea id="olInput" style="min-height:100px" placeholder="e.g. Opportunity cost"></textarea>
+      <div class="row" style="margin-top:8px"><button class="btn solid" id="olSend">Ask the tutor</button></div>
+    </div>
+    <div><div class="small">Tutor's answer</div><div id="olOut" style="white-space:pre-wrap;background:var(--card);border:2px solid var(--line);border-radius:12px;padding:14px;min-height:220px"></div></div>
+  </div>
+</div></section>
+
+<section class="band"><div class="wrap">
+  <h2>Diploma</h2>
+  <p class="small" id="dipNote"></p>
+  <div class="diploma" id="diploma">
+    <div style="font-family:'EB Garamond',serif;font-size:20px;letter-spacing:.02em">Urmila's MBA University</div>
+    <div class="small">Berlin · Curiositas ducit</div>
+    <h3>Certificate of Completion</h3>
+    <div>This is to certify that</div>
+    <div class="name">Urmila Koli</div>
+    <div>has completed the self-directed programme</div>
+    <div style="font-family:'EB Garamond',serif;font-size:24px;margin:6px 0">MBA, Business &amp; Ideas</div>
+    <div id="dipStats" style="margin-top:10px"></div>
+    <p class="small" style="margin-top:22px">A personal learning programme designed with Claude. Not an accredited academic degree.</p>
+  </div>
+</div></section>
+
+<script>
+{
+const C={{COURSES}};
+const TERMS={{TERMS}};
+const KEY="umuPortal1";let S={g:{},memo:""};
+try{const r=localStorage.getItem(KEY);if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const grade=p=>p>=.95?1.0:p>=.9?1.3:p>=.85?1.7:p>=.8?2.0:p>=.75?2.3:p>=.7?2.7:p>=.65?3.0:p>=.6?3.3:p>=.55?3.7:p>=.5?4.0:5.0;
+document.getElementById('terms').innerHTML=TERMS.map(t=>`<div class="term"><h3>${t.name}</h3><div class="dates">${t.dates}</div><ul>${C.filter(c=>c.term===t.id).map(c=>`<li>${c.code} ${esc(c.title)}</li>`).join('')}</ul></div>`).join('');
+const schools=[...new Set(C.map(c=>c.school))];
+document.getElementById('schools').innerHTML=schools.map(s=>`<div class="school"><h3>${esc(s)}</h3><div class="courses">${C.filter(c=>c.school===s).map(c=>`<div class="course"><span class="code">${c.code} · ${c.ects} ECTS · Term ${c.term}</span><h3>${esc(c.title)}</h3><div class="meta">${c.n?c.n+' lectures':'Independent project'} · ${esc(c.blurb)}</div><div class="row">${c.url?`<a class="btn solid" href="${c.url}">Enter classroom</a>`:`<a class="btn solid" href="#capstone-brief" onclick="document.getElementById('memo').focus()">Open brief</a>`}</div></div>`).join('')}</div></div>`).join('');
+function rows(){
+ const T=document.getElementById('transcript');
+ let earned=0,wsum=0,wects=0;
+ const body=C.map((c,i)=>{const g=S.g[c.code];let gr="",st='<span class="pend">In progress</span>';
+  if(g!==undefined&&g!==""){const p=c.n?Math.min(1,g/c.n):g/100;const v=grade(p);gr=v.toFixed(1);if(v<=4){earned+=c.ects;wsum+=v*c.ects;wects+=c.ects;st='<span class="pass">Passed</span>'}else st='<span class="fail">Not yet passed</span>'}
+  const inp=c.n?`<input type="number" min="0" max="${c.n}" value="${g??''}" data-c="${c.code}" aria-label="${c.code} correct answers"> <span class="small">/ ${c.n}</span>`:`<input type="number" min="0" max="100" value="${g??''}" data-c="${c.code}" aria-label="Capstone score percent"> <span class="small">%</span>`;
+  return `<tr><td data-l="Code">${c.code}</td><td data-l="Course">${esc(c.title)}</td><td data-l="Term">${c.term}</td><td data-l="ECTS" class="n">${c.ects}</td><td data-l="Score">${inp}</td><td data-l="Grade" class="n">${gr||'–'}</td><td data-l="Status">${st}</td></tr>`}).join('');
+ const total=C.reduce((a,c)=>a+c.ects,0);const gpa=wects?(wsum/wects).toFixed(2):"–";
+ T.innerHTML=`<thead><tr><th>Code</th><th>Course</th><th>Term</th><th class="n">ECTS</th><th>Score</th><th class="n">Grade</th><th>Status</th></tr></thead><tbody>${body}</tbody><tfoot><tr><td data-l="" colspan="3">Total</td><td data-l="ECTS" class="n">${earned} / ${total}</td><td data-l=""></td><td data-l="GPA" class="n">${gpa}</td><td data-l=""></td></tr></tfoot>`;
+ T.querySelectorAll('input').forEach(x=>x.addEventListener('change',()=>{const v=x.value.trim();if(v==="")delete S.g[x.dataset.c];else S.g[x.dataset.c]=Math.max(0,Math.min(+x.max,+v));save();rows()}));
+ document.getElementById('ectsTxt').textContent=`Credits earned: ${earned} of ${total} ECTS`;
+ document.getElementById('ectsBar').style.width=(earned/total*100)+"%";
+ document.getElementById('gpaTxt').textContent=`GPA (German scale): ${gpa}`;
+ const done=earned>=total;const d=document.getElementById('diploma');d.classList.toggle('locked',!done);
+ document.getElementById('dipNote').textContent=done?"Congratulations, graduate!":`Unlocks when all ${total} ECTS are earned. ${total-earned} to go.`;
+ document.getElementById('dipStats').innerHTML=done?`with <b>${total} ECTS</b> and a final grade of <b>${gpa}</b>, awarded ${new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}`:`<span class="small">Pending completion</span>`;
+}
+const memo=document.getElementById('memo');memo.parentElement.parentElement.parentElement.id="capstone-brief";memo.value=S.memo||"";
+const mc=()=>{const w=(memo.value.trim().match(/\S+/g)||[]).length;document.getElementById('memoCount').textContent=`${w} words · aim for 350–500`};
+memo.addEventListener('input',()=>{S.memo=memo.value;save();mc()});mc();
+rows();
+fetch('courses/index.json').then(r=>r.ok?r.json():[]).then(list=>{if(!list.length)return;document.getElementById('aiElectives').hidden=false;document.getElementById('aiCourses').innerHTML=list.map(c=>`<div class="course"><span class="code">${esc(c.code)} · ${c.ects} ECTS · Elective</span><h3>${esc(c.title)}</h3><div class="meta">${c.n} lectures · ${esc(c.blurb)} · made with ${esc(c.model)}</div><div class="row"><a class="btn solid" href="${esc(c.file)}">Enter classroom</a></div></div>`).join('')}).catch(()=>{});
+
+const OL="http://localhost:11434";const st=document.getElementById('olStatus'),sel=document.getElementById('olModel'),out=document.getElementById('olOut');
+async function olConnect(){st.textContent="Connecting…";try{const r=await fetch(OL+"/api/tags");const j=await r.json();const ms=(j.models||[]).map(m=>m.name);if(!ms.length){st.textContent="Connected, but no models yet. In Terminal run: ollama pull llama3.2";return}sel.innerHTML=ms.map(m=>`<option ${m===S.olModel?'selected':''}>${esc(m)}</option>`).join('');st.innerHTML='<span class="pass">Connected to Ollama</span>'}catch(e){st.innerHTML='<span class="fail">Can\'t reach Ollama.</span> Open this page from your computer via the local server, and check that Ollama is running.'}}
+sel.addEventListener('change',()=>{S.olModel=sel.value;save()});
+document.getElementById('olConnect').onclick=olConnect;
+const courseList=C.map(c=>c.code+" "+c.title).join("; ");
+const SYS="You are a warm, rigorous MBA tutor at Urmila's MBA University in Berlin. Urmila has an MSc in Data Analytics and a background in banking KYC/AML; she is aiming for finance and risk roles. Courses: "+courseList+". Be accurate; if unsure, say so. Use short paragraphs and concrete examples, ideally from finance, banking or Berlin life.";
+const PROMPTS={explain:t=>`Explain "${t}" simply in under 200 words, then give one real-world example from finance or banking, then one question to check my understanding.`,
+quiz:t=>`Give me 3 multiple-choice questions (A–D) on "${t}". Put the answers with one-line explanations at the very end under "Answers".`,
+grade:t=>`Grade this capstone memo out of 100 using this rubric: clear problem (20), correct use of at least five course concepts from five different courses (40), evidence and data (20), clear writing (20). Give the score per criterion, the total, the two biggest strengths, and the three most important improvements.\n\nMEMO:\n${t||S.memo||"(no memo yet)"}`,
+english:t=>`Correct the English in the text below. First show the corrected version, then list each change with a one-line reason. Keep my meaning and voice.\n\nTEXT:\n${t}`,
+ask:t=>t};
+document.getElementById('olSend').onclick=async()=>{const mode=document.getElementById('olMode').value;const t=document.getElementById('olInput').value.trim();if(!t&&mode!=="grade"){out.textContent="Type a topic, question or text first.";return}
+ if(!sel.value){await olConnect();if(!sel.value)return}
+ out.textContent="Thinking… (local models can take 10–60 seconds)";
+ try{const r=await fetch(OL+"/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:sel.value,stream:false,messages:[{role:"system",content:SYS},{role:"user",content:PROMPTS[mode](t)}]})});const j=await r.json();out.textContent=(j.message&&j.message.content)||j.error||"No answer received."}catch(e){out.textContent="Couldn't reach Ollama. Check that it's running and that this page was opened from http://localhost."}};
+if(location.protocol.startsWith("http")&&location.hostname==="localhost")olConnect();
+}
+</script>
+</body>
+</html>
