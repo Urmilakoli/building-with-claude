@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My Learning Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+/* VOICE: encouraging study coach, plain instructions, nothing vague
+   IDEA: a study planner that doubles as the arcade's front door: every topic, every day, every lesson linked
+   PICTURE: today's card, large, with its three topics and a big start button, beside overall progress
+   COLOUR and TYPE: coral field from the folder's first lesson, white ground, black ink, blue accent; Fredoka titles, Nunito body
+   LAYOUT: hero (today + progress), how it works, 12 week blocks with tickable days, then the full topic library */
+:root{color-scheme:light dark;--bg:light-dark(#fff,#141414);--ink:light-dark(#161616,#f3efe9);--soft:light-dark(#fff1ee,#241a19);--coral:#ff5a4e;--blue:light-dark(#1f5fe0,#7aa7ff);--line:light-dark(#f0d9d4,#3a2b29);--card:light-dark(#fff,#1c1c1c);--mute:light-dark(#5d5552,#b9b0aa);--ok:light-dark(#1b9e5a,#5fd197)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16.5px/1.55 Nunito,system-ui,sans-serif;overflow-x:clip}
+h1,h2,h3{font-family:Fredoka,Nunito,sans-serif;line-height:1.08;text-wrap:balance;margin:0}
+h1{font-size:clamp(32px,5.5vw,50px)}h2{font-size:clamp(24px,3.6vw,34px)}h3{font-size:19px}
+.band{padding:clamp(28px,4vw,60px) max(5vw,16px)}.wrap{max-width:1240px;margin:auto}
+.hero{background:var(--coral);color:#1a0b09}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:32px;align-items:center}
+.hero p{font-size:17.5px;max-width:34em}
+.stats{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}.stats span{background:#fff;border-radius:999px;padding:6px 14px;font-weight:800;font-size:14.5px;color:#161616}
+.bar{height:14px;background:#ffe1dc;border-radius:9px;overflow:hidden;margin:10px 0 4px}.bar i{display:block;height:100%;background:#1f5fe0;border-radius:9px;width:0;transition:width .5s}
+.today{background:#fff;color:#161616;border-radius:22px;padding:22px;box-shadow:0 8px 0 #c2392f}
+.today .lbl{font:600 15px Fredoka;color:#c2392f}.today h2{margin:4px 0 12px}
+.today ol{margin:0 0 16px;padding-left:22px}.today li{margin:6px 0;font-weight:700}.today li small{display:block;font-weight:600;color:#5d5552}
+.btn{font:800 15.5px Nunito;min-height:44px;padding:10px 18px;border-radius:12px;border:2px solid currentColor;background:transparent;color:inherit;text-decoration:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.btn.solid{background:#1f5fe0;border-color:#1f5fe0;color:#fff}
+.row{display:flex;flex-wrap:wrap;gap:8px}
+button:focus-visible,a:focus-visible,summary:focus-visible,input:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.how{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:14px;margin-top:18px}
+.how div{background:var(--soft);border-radius:16px;padding:16px}.how b{font-family:Fredoka;font-size:17px;display:block;margin-bottom:4px}
+.weeks{display:grid;gap:12px;margin-top:18px}
+details.wk{border:2px solid var(--line);border-radius:18px;background:var(--card)}
+details.wk[open]{border-color:var(--coral)}
+details.wk>summary{list-style:none;cursor:pointer;padding:16px 18px;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;justify-content:space-between}
+details.wk>summary::-webkit-details-marker{display:none}
+.wk .sub{color:var(--mute);font-size:14.5px;flex-basis:100%}
+.pill{font-weight:800;font-size:13.5px;border-radius:999px;padding:4px 10px;background:var(--soft)}
+.pill.done{background:var(--ok);color:#fff}
+.day{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;padding:12px 18px;border-top:1px solid var(--line);align-items:start}
+.day.review{background:var(--soft)}
+.day input{width:24px;height:24px;margin:10px 0 0;accent-color:var(--blue);cursor:pointer}
+.day .dn{font:600 15px Fredoka}.day.isdone .dn{color:var(--ok)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chips a{font-size:14.5px;font-weight:700;text-decoration:none;color:var(--ink);background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:6px 10px;min-height:36px;display:inline-flex;align-items:center}
+.day.review .chips a{background:var(--card)}
+.chips a:hover{border-color:var(--blue)}
+.lib{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:14px;margin-top:18px;align-items:start}
+.mod{border:2px solid var(--line);border-radius:18px;padding:16px 18px;background:var(--card)}
+.mod p{margin:4px 0 8px;color:var(--mute);font-size:14.5px}
+.mod ol{margin:8px 0 0;padding-left:22px;font-size:15px}.mod li{margin:2px 0}
+.small{font-size:13.5px;color:var(--mute)}
+footer{text-align:center}
+@media(max-width:600px){.hero .wrap{grid-template-columns:minmax(0,1fr)}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="band hero"><div class="wrap">
+  <div>
+    <p style="margin:0 0 8px;font-weight:800;color:#4a1712">Bored? Learn Something Fun · Master plan</p>
+    <h1>Your 12-week plan to learn everything on your list</h1>
+    <p>Every topic you sent, in one place: 3 short levels a day, 6 days a week, and a game-and-review day on Sundays. About 20 minutes a day.</p>
+    <div class="stats" id="stats"></div>
+    <div class="bar" aria-hidden="true"><i id="bar"></i></div>
+    <span id="progTxt" style="font-weight:800"></span>
+  </div>
+  <div class="today" id="today"></div>
+</div></header>
+
+<section class="band"><div class="wrap">
+  <h2>How to use this plan</h2>
+  <div class="how">
+    <div><b>1. Open today's card</b>Tap a topic to jump straight to its world in the lesson. Open the level, read the story and the big idea.</div>
+    <div><b>2. Answer the quiz</b>One question per level. Getting it wrong is fine; the explanation is where the learning happens.</div>
+    <div><b>3. Do one "Try it today"</b>Pick the one that fits your day. Doing beats reading.</div>
+    <div><b>4. Tick the day</b>Tick it here when you finish. On Sundays, play that week's lesson games and retry any quiz you missed.</div>
+  </div>
+  <p class="small" style="margin-top:12px">Missed a day? Don't double up. Just continue from the first unticked day; the plan waits for you. Ticks are saved in this browser only, so use the same device and browser each time.</p>
+</div></section>
+
+<section class="band" style="background:var(--soft)"><div class="wrap">
+  <h2>Week by week</h2>
+  <div class="weeks" id="weeks"></div>
+</div></section>
+
+<section class="band"><div class="wrap">
+  <h2>All topics, by lesson</h2>
+  <p class="small">Your complete topic list. Each lesson opens in your Bored? Learn Something Fun folder.</p>
+  <div class="lib" id="lib"></div>
+</div></section>
+
+<footer class="band small"><div class="wrap"><button class="btn" id="reset">Reset all ticks</button></div></footer>
+
+<script>
+{
+const DATA={{DATA}};
+const KEY="learnPlan12";let S={};
+try{S=JSON.parse(localStorage.getItem(KEY)||"{}")||{}}catch(e){S={}}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const M=DATA.mods,WK=DATA.weeks;
+const link=it=>M[it.m].url+"#"+it.w;
+let n=0;const all=[];
+WK.forEach((w,wi)=>w.forEach((d,di)=>{d.id="w"+wi+"d"+di;if(d.type==="study"){n++;d.num=n}all.push(d)}));
+const total=M.reduce((a,m)=>a+m.topics.length,0);
+document.getElementById('stats').innerHTML=[M.length+" lessons",total+" topics",WK.length+" weeks","~20 min a day"].map(s=>`<span>${s}</span>`).join('');
+
+function dayHTML(d){const done=!!S[d.id];
+ if(d.type==="review"){return `<div class="day review${done?' isdone':''}"><input type="checkbox" data-id="${d.id}" ${done?'checked':''} aria-label="Mark review day done"><div><div class="dn">Sunday · Games & review</div><div class="small">Play the games in these lessons and retry any quiz you got wrong this week.</div><div class="chips">${d.mods.map(m=>`<a href="${M[m].url}#games">${esc(M[m].name)} games</a>`).join('')}</div></div></div>`}
+ return `<div class="day${done?' isdone':''}"><input type="checkbox" data-id="${d.id}" ${done?'checked':''} aria-label="Mark day ${d.num} done"><div><div class="dn">Day ${d.num} · ${esc([...new Set(d.items.map(i=>M[i.m].name))].join(' + '))}</div><div class="chips">${d.items.map(i=>`<a href="${link(i)}">${esc(i.t)}</a>`).join('')}</div></div></div>`}
+
+function render(){
+ const cur=all.find(d=>!S[d.id]);
+ const curW=cur?WK.findIndex(w=>w.includes(cur)):-1;
+ document.getElementById('weeks').innerHTML=WK.map((w,wi)=>{const ds=w.filter(d=>S[d.id]).length;const names=[...new Set(w.flatMap(d=>d.type==="study"?d.items.map(i=>M[i.m].name):[]))];
+  return `<details class="wk" ${wi===curW?'open':''}><summary><h3>Week ${wi+1}</h3><span class="pill${ds===w.length?' done':''}">${ds} / ${w.length} days</span><span class="sub">${esc(names.join(' · '))}</span></summary>${w.map(dayHTML).join('')}</details>`}).join('');
+ const studyDone=all.filter(d=>d.type==="study"&&S[d.id]).length;
+ document.getElementById('bar').style.width=(studyDone/n*100)+"%";
+ document.getElementById('progTxt').textContent=`${studyDone} of ${n} study days done`;
+ const t=document.getElementById('today');
+ if(!cur){t.innerHTML=`<div class="lbl">All done</div><h2>You finished all ${total} topics!</h2><p>Go back to any lesson and replay the games, or send me a new topic list.</p>`;return}
+ if(cur.type==="review"){t.innerHTML=`<div class="lbl">Week ${curW+1} · Sunday</div><h2>Games & review day</h2><p>Play this week's games and retry any quiz you missed.</p><div class="row">${cur.mods.map(m=>`<a class="btn solid" href="${M[m].url}#games">${esc(M[m].name)}</a>`).join('')}</div><div class="row" style="margin-top:10px"><button class="btn" data-done="${cur.id}">Mark done</button></div>`}
+ else{t.innerHTML=`<div class="lbl">Up next · Week ${curW+1}</div><h2>Day ${cur.num} of ${n}</h2><ol>${cur.items.map(i=>`<li><a href="${link(i)}" style="color:inherit">${esc(i.t)}</a><small>${esc(M[i.m].name)}</small></li>`).join('')}</ol><div class="row"><a class="btn solid" href="${link(cur.items[0])}">Start level 1</a><button class="btn" data-done="${cur.id}">Mark done</button></div>`}
+ const b=t.querySelector('[data-done]');if(b)b.onclick=()=>{S[b.dataset.done]=1;save();render()};
+}
+document.getElementById('weeks').addEventListener('change',e=>{const id=e.target.dataset&&e.target.dataset.id;if(!id)return;if(e.target.checked)S[id]=1;else delete S[id];save();render()});
+document.getElementById('lib').innerHTML=M.map(m=>`<div class="mod"><h3>${esc(m.name)}</h3><p>${esc(m.subj)} · ${m.topics.length} topics</p><a class="btn" href="${m.url}">Open lesson</a><ol>${m.topics.map(t=>`<li>${esc(t)}</li>`).join('')}</ol></div>`).join('');
+let armed=false;const rb=document.getElementById('reset');rb.onclick=()=>{if(!armed){armed=true;rb.textContent='Tap again to confirm reset';setTimeout(()=>{armed=false;rb.textContent='Reset all ticks'},4000);return}S={};save();armed=false;rb.textContent='Reset all ticks';render()};
+render();
+}
+</script>
+</body>
+</html>

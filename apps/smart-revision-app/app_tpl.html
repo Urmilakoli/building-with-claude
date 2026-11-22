@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Smart Revision App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+/* VOICE: friendly coach, one clear action at a time
+   IDEA: a flashcard deck that learns you back: spaced repetition boxes that fill as you remember
+   PICTURE: the current card, large, in the middle of the first screen, with today's due count and mastery bars beside it
+   COLOUR and TYPE: coral field from the learning folder, white ground, black ink, blue accent; Fredoka titles, Nunito body
+   LAYOUT: top bar with streak and due count; card stage; then subject mastery and your learning pattern; backup at the end */
+:root{color-scheme:light dark;--bg:light-dark(#fff,#141414);--ink:light-dark(#161616,#f3efe9);--soft:light-dark(#fff1ee,#241a19);--coral:#ff5a4e;--blue:light-dark(#1f5fe0,#7aa7ff);--line:light-dark(#f0d9d4,#3a2b29);--card:light-dark(#fff,#1c1c1c);--mute:light-dark(#5d5552,#b9b0aa);--ok:light-dark(#1b9e5a,#5fd197)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16.5px/1.55 Nunito,system-ui,sans-serif;overflow-x:clip}
+h1,h2,h3{font-family:Fredoka,Nunito,sans-serif;line-height:1.1;text-wrap:balance;margin:0}
+h1{font-size:clamp(26px,4vw,36px)}h2{font-size:clamp(22px,3vw,28px)}
+.band{padding:clamp(20px,3.5vw,48px) max(5vw,16px)}.wrap{max-width:1100px;margin:auto}
+.top{background:var(--coral);color:#1a0b09}
+.top .wrap{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:end;justify-content:space-between}
+.kpis{display:flex;flex-wrap:wrap;gap:8px}.kpis span{background:#fff;color:#161616;border-radius:999px;padding:6px 14px;font-weight:800;font-size:14.5px}
+.stage{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:24px;align-items:start}
+.flash{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:clamp(18px,3vw,30px);min-height:360px}
+.meta{font-size:13.5px;font-weight:800;color:var(--mute);margin-bottom:8px}
+.flash h2{margin-bottom:8px}.hook{color:var(--mute);margin:0 0 14px}
+.idea{background:var(--soft);border-radius:14px;padding:14px 16px;margin:12px 0}
+.btn{font:800 15.5px Nunito;min-height:44px;padding:10px 18px;border-radius:12px;border:2px solid currentColor;background:transparent;color:inherit;cursor:pointer;display:inline-flex;align-items:center;text-decoration:none}
+.btn.solid{background:var(--blue);border-color:var(--blue);color:#fff}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.opts{display:grid;gap:8px;margin-top:10px}
+.opts button{text-align:start;font:600 15.5px Nunito;min-height:44px;padding:10px 14px;border-radius:12px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.opts button.right{border-color:var(--ok);background:light-dark(#e6f7ee,#143222)}.opts button.wrong{border-color:var(--coral);background:light-dark(#ffeceb,#3a1a18)}
+button:focus-visible,a:focus-visible,textarea:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.side{display:grid;gap:14px}
+.panel{background:var(--soft);border-radius:18px;padding:16px 18px}
+.panel h3{font-size:18px;margin-bottom:8px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{font:700 14px Nunito;min-height:38px;padding:6px 12px;border-radius:999px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.chips button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.mrow{display:grid;grid-template-columns:minmax(0,1fr) 46px;gap:8px;align-items:center;margin:6px 0;font-size:14.5px}
+.mbar{grid-column:1/-1;height:8px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:-2px}.mbar i{display:block;height:100%;background:var(--blue)}
+.num{text-align:right;font-weight:800;font-variant-numeric:tabular-nums}
+.pattern{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:12px;margin-top:12px}
+.pattern div{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:14px}
+.pattern b{display:block;font:600 22px Fredoka}
+textarea{width:100%;min-height:90px;font:14px/1.4 ui-monospace,monospace;border-radius:12px;border:2px solid var(--line);background:var(--card);color:var(--ink);padding:10px}
+.small{font-size:13.5px;color:var(--mute)}
+@media(max-width:760px){.stage{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+<header class="band top"><div class="wrap">
+  <div><p style="margin:0 0 4px;font-weight:800;color:#4a1712">Bored? Learn Something Fun · Revision</p><h1>Smart Revision App</h1></div>
+  <div class="kpis" id="kpis"></div>
+</div></header>
+
+<section class="band"><div class="wrap stage">
+  <div class="flash" id="flash" aria-live="polite"></div>
+  <div class="side">
+    <div class="panel"><h3>Focus</h3><p class="small" style="margin:0 0 8px">Pick subjects, or leave all on for a smart mix.</p><div class="chips" id="subs"></div>
+      <div class="row"><button class="btn" id="modeBtn"></button></div></div>
+    <div class="panel"><h3>Mastery by subject</h3><div id="mastery"></div><p class="small" style="margin:8px 0 0">Bars fill as cards move up the 5 memory boxes.</p></div>
+  </div>
+</div></section>
+
+<section class="band" style="background:var(--soft)"><div class="wrap">
+  <h2>Your learning pattern</h2>
+  <p class="small">The app adapts to this: weak subjects come back sooner, mastered cards space out to 16 days, and new cards arrive 5 a day in your 12-week plan order.</p>
+  <div class="pattern" id="pattern"></div>
+</div></section>
+
+<section class="band"><div class="wrap">
+  <h2>Backup your progress</h2>
+  <p class="small">Progress is saved in this browser only. Copy the backup code now and then (for example into your diary repo), and paste it on a new device to restore.</p>
+  <div class="row"><button class="btn" id="copyBtn">Copy backup code</button><button class="btn" id="restoreBtn">Restore from pasted code</button></div>
+  <textarea id="backup" aria-label="Backup code" placeholder="Backup code appears or is pasted here"></textarea>
+  <p class="small" id="bkMsg"></p>
+</div></section>
+
+<script>
+{
+const CARDS={{CARDS}};
+const KEY="smartRevision1";const DAY=864e5;
+const today=()=>Math.floor((Date.now()-new Date().getTimezoneOffset()*6e4)/DAY);
+const GAP=[0,1,2,4,8,16];
+let S={c:{},log:[],newDay:-1,newCount:0,subs:[],mode:"smart"};
+try{const r=localStorage.getItem(KEY);if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const SUBJ=[...new Set(CARDS.map(c=>c.subj))];
+const st=i=>S.c[i]||null;
+function subjAcc(s){const L=S.log.filter(l=>CARDS[l.i].subj===s);if(!L.length)return null;return L.filter(l=>l.ok).length/L.length}
+function active(i){return !S.subs.length||S.subs.includes(CARDS[i].subj)}
+function queue(){const t=today();
+ const due=CARDS.map((c,i)=>i).filter(i=>active(i)&&st(i)&&st(i).due<=t);
+ due.sort((a,b)=>{if(S.mode==="weak"){const wa=(subjAcc(CARDS[a].subj)??1),wb=(subjAcc(CARDS[b].subj)??1);if(wa!==wb)return wa-wb}return st(a).box-st(b).box||st(a).due-st(b).due});
+ if(S.newDay!==t){S.newDay=t;S.newCount=0}
+ const room=Math.max(0,5-S.newCount);
+ const fresh=CARDS.map((c,i)=>i).filter(i=>active(i)&&!st(i)).slice(0,room);
+ return {due,fresh}}
+let cur=null,phase="front";
+function pick(){const q=queue();cur=q.due[0]??q.fresh[0]??null;phase="front";render()}
+function answer(ok){const t=today();const s=st(cur)||{box:0,due:t,seen:0,right:0};
+ if(!S.c[cur])S.newCount++;
+ s.seen++;if(ok){s.right++;s.box=Math.min(5,s.box+1)}else s.box=1;
+ s.due=ok?t+GAP[s.box]:t+1;
+ S.c[cur]=s;S.log.push({i:cur,ok,h:new Date().getHours(),d:t});if(S.log.length>3000)S.log.shift();save()}
+function render(){
+ const q=queue();const t=today();
+ const studied=Object.keys(S.c).length;const mastered=Object.values(S.c).filter(s=>s.box>=4).length;
+ const dset=new Set(S.log.map(l=>l.d));let streak=0;let dd=dset.has(t)?t:t-1;while(dset.has(dd)){streak++;dd--}
+ document.getElementById('kpis').innerHTML=[`${q.due.length} due`,`${Math.max(0,5-(S.newDay===t?S.newCount:0))} new today`,`${studied} / ${CARDS.length} started`,`${mastered} mastered`,`${streak}-day streak`].map(x=>`<span>${x}</span>`).join('');
+ const f=document.getElementById('flash');
+ if(cur===null){f.innerHTML=`<div class="meta">All caught up</div><h2>Nothing due right now</h2><p class="hook">Come back tomorrow for new cards and reviews, or switch Focus to other subjects.</p>`;return}
+ const c=CARDS[cur];const s=st(cur);const tag=s?`Box ${s.box} of 5`:"New card";
+ let h=`<div class="meta">${esc(c.subj)} · ${esc(c.lesson)} · ${tag}</div><h2>${esc(c.t)}</h2><p class="hook">${esc(c.h)}</p>`;
+ if(phase==="front")h+=`<p><b>Recall first:</b> what's the big idea behind this? Say it out loud or in your head, then reveal.</p><div class="row"><button class="btn solid" id="reveal">Reveal the big idea</button><a class="btn" href="${c.url}#${c.w}">Open full lesson</a></div>`;
+ else{h+=`<div class="idea">${esc(c.i)}</div><p><b>Quiz:</b> ${esc(c.q)}</p><div class="opts">${c.o.map((o,k)=>`<button data-k="${k}">${esc(o)}</button>`).join('')}</div><p id="why" hidden></p>`}
+ f.innerHTML=h;
+ const r=document.getElementById('reveal');if(r)r.onclick=()=>{phase="back";render()};
+ f.querySelectorAll('.opts button').forEach(b=>b.onclick=()=>{const ok=+b.dataset.k===c.a;f.querySelectorAll('.opts button').forEach(x=>{x.disabled=true;if(+x.dataset.k===c.a)x.classList.add('right')});if(!ok)b.classList.add('wrong');answer(ok);const w=document.getElementById('why');w.hidden=false;w.innerHTML=`<b>${ok?'Correct. This card moves up a box.':'Not quite. It will come back tomorrow.'}</b> ${esc(c.e)}<div class="row"><button class="btn solid" id="next">Next card</button></div>`;document.getElementById('next').onclick=pick;sidebar()});
+ sidebar()}
+function sidebar(){
+ document.getElementById('subs').innerHTML=SUBJ.map(s=>`<button class="${S.subs.includes(s)?'on':''}" data-s="${esc(s)}" aria-pressed="${S.subs.includes(s)}">${esc(s)}</button>`).join('');
+ document.querySelectorAll('#subs button').forEach(b=>b.onclick=()=>{const s=b.dataset.s;S.subs=S.subs.includes(s)?S.subs.filter(x=>x!==s):[...S.subs,s];save();pick()});
+ document.getElementById('modeBtn').textContent=S.mode==="weak"?"Mode: weakest subjects first":"Mode: smart mix";
+ document.getElementById('mastery').innerHTML=SUBJ.map(s=>{const ids=CARDS.map((c,i)=>i).filter(i=>CARDS[i].subj===s);const pts=ids.reduce((a,i)=>a+(st(i)?st(i).box:0),0);const pct=Math.round(pts/(ids.length*5)*100);return `<div class="mrow"><span>${esc(s)}</span><span class="num">${pct}%</span><div class="mbar"><i style="width:${pct}%"></i></div></div>`}).join('');
+ const L=S.log;const acc=L.length?Math.round(L.filter(l=>l.ok).length/L.length*100)+"%":"–";
+ const sa=SUBJ.map(s=>[s,subjAcc(s)]).filter(x=>x[1]!==null&&S.log.filter(l=>CARDS[l.i].subj===x[0]).length>=3);
+ sa.sort((a,b)=>b[1]-a[1]);
+ const slots=[["Morning",5,12],["Afternoon",12,17],["Evening",17,22],["Night",22,29]];
+ const ts=slots.map(([n,a,b])=>{const x=L.filter(l=>{const h=l.h<5?l.h+24:l.h;return h>=a&&h<b});return [n,x.length,x.length?x.filter(l=>l.ok).length/x.length:0]}).filter(x=>x[1]>=5).sort((a,b)=>b[2]-a[2]);
+ document.getElementById('pattern').innerHTML=[["Overall accuracy",acc],["Strongest subject",sa.length?sa[0][0]:"Needs 3+ answers"],["Needs most practice",sa.length>1?sa[sa.length-1][0]:"Needs more data"],["Your sharpest time",ts.length?ts[0][0]:"Needs 5+ answers"],["Cards answered",String(L.length)]].map(([k,v])=>`<div><span class="small">${k}</span><b>${esc(v)}</b></div>`).join('')}
+document.getElementById('modeBtn').onclick=()=>{S.mode=S.mode==="weak"?"smart":"weak";save();pick()};
+const bk=document.getElementById('backup'),msg=document.getElementById('bkMsg');
+document.getElementById('copyBtn').onclick=async()=>{const code=btoa(unescape(encodeURIComponent(JSON.stringify(S))));bk.value=code;try{await navigator.clipboard.writeText(code);msg.textContent="Backup code copied."}catch(e){bk.select();msg.textContent="Select the code above and copy it."}};
+document.getElementById('restoreBtn').onclick=()=>{try{const o=JSON.parse(decodeURIComponent(escape(atob(bk.value.trim()))));if(!o||typeof o.c!=="object")throw 0;S=Object.assign({c:{},log:[],newDay:-1,newCount:0,subs:[],mode:"smart"},o);save();msg.textContent="Progress restored.";pick()}catch(e){msg.textContent="That code didn't work. Check that you pasted all of it."}};
+pick();
+}
+</script>
+</body>
+</html>
